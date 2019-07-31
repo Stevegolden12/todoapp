@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\public",
-    "\\src"
+    "\\src",
+    "\\src\\image"
   ],
-  "SelectedNode": "\\src\\serviceWorker.js",
+  "SelectedNode": "\\src\\image\\down-arrow.svg",
   "PreviewInSolutionExplorer": false
 }
