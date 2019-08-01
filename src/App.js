@@ -13,8 +13,9 @@ class App extends React.Component{
   }
 
   addItem(e) {
-    e.preventDefault();
-    let newItem = e.target.value;   
+    
+    let newItem = e.target.value; 
+    console.log("newItem: " + newItem)
     let keycode = e.keyCode ? e.keyCode : e.charCode;
 
  
@@ -24,6 +25,7 @@ class App extends React.Component{
         listCount: this.state.listCount + 1,
         listItems: [...this.state.listItems, newItem]
       })
+      e.preventDefault();
     }   
   }
 
@@ -54,15 +56,23 @@ class App extends React.Component{
 
 function ListItem(props) {
   const allItems = props.lItems;
-
-
-  const items = allItems.map((task, key) => <div>{task}</div>);
+  let todoCount = props.lCount;
+  console.log("todoCount: " + todoCount)
+  const items = allItems.map((task, index) => <div key={index} className="addedTodos">{task}</div>);
 
   return (
-    <React.Fragment>
-   
+    <React.Fragment>   
         {items}
-     
+      {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} items left
+        <nav>
+          <ul id="todoSelect">
+            <li>All</li>
+            <li>Active</li>
+            <li>Completed</li>
+          </ul>
+        </nav>
+      </div>
+        <div id="bookPagesImage"></div> <div id="bookPagesImage2"></div></div>}
      </React.Fragment>
     )
 }
