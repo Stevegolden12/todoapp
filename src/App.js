@@ -58,7 +58,17 @@ function ListItem(props) {
   const allItems = props.lItems;
   let todoCount = props.lCount;
   console.log("todoCount: " + todoCount)
-  const items = allItems.map((task, index) => <div key={index} className="addedTodos">{task}</div>);
+  const items = allItems.map((task, index) => 
+    <div key={index} id={index} className="todoWrapper">     
+      <label key={index} className="container">
+        <div key={index} id="checkWrapper">
+          <input key={index} type="checkbox" className="check-box" />
+          <span key={index} className="checkmark"></span>
+        </div>
+          <div key={index} className="addedTodos">{task}</div>   
+      </label>    
+  </div>
+  );
 
   return (
     <React.Fragment>   
