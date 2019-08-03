@@ -8,10 +8,14 @@ class App extends React.Component{
     this.state ={
       listCount: 0,
       listItems: [],
+
     }
+
     this.addItem = this.addItem.bind(this);
+    this.changeCompleteStatus = this.changeCompleteStatus.bind(this);
   }
 
+  
   addItem(e) {
     
     let newItem = e.target.value; 
@@ -23,11 +27,17 @@ class App extends React.Component{
       console.log("WORKING")
       this.setState({
         listCount: this.state.listCount + 1,
-        listItems: [...this.state.listItems, newItem]
+        listItems: [...this.state.listItems, newItem],
+  
       })
       e.preventDefault();
     }   
   }
+
+  
+changeCompleteStatus() {
+
+}
 
   render() {
 
@@ -42,7 +52,7 @@ class App extends React.Component{
               <label id="firstLabel"></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems}/>
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} changeComplete={this.changeCompleteStatus()} />
           </form>
         </section>
         <footer id="footerPage">
@@ -54,21 +64,25 @@ class App extends React.Component{
   }
 }
 
-function ListItem(props) {
-  const allItems = props.lItems;
-  let todoCount = props.lCount;
-  console.log("todoCount: " + todoCount)
-  const items = allItems.map((task, index) => 
-    <div key={index} id={index} className="todoWrapper">     
-      <label key={index} className="container">
-        <div key={index} id="checkWrapper">
-          <input key={index} type="checkbox" className="check-box" />
-          <span key={index} className="checkmark"></span>
-        </div>
-          <div key={index} className="addedTodos">{task}</div>   
-      </label>    
-  </div>
-  );
+
+  function ListItem(props) {
+    const allItems = props.lItems;
+    let todoCount = props.lCount;
+    console.log("todoCount: " + todoCount)
+    const items = allItems.map((task, index) =>
+      <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
+        <label key={`container${index}`} className="container">
+          <div key={`checkWrapper${index}`} id="checkWrapper">
+            <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={props.changeCompleteStatus} />
+            <span key={`checkmark${index}`} className="checkmark"></span>
+          </div>
+          <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
+        </label>
+      </div>
+    )
+
+ 
+
 
   return (
     <React.Fragment>   
@@ -81,10 +95,13 @@ function ListItem(props) {
             <li>Completed</li>
           </ul>
         </nav>
+        <span className="hideText">Clear Completed</span>
       </div>
         <div id="bookPagesImage"></div> <div id="bookPagesImage2"></div></div>}
      </React.Fragment>
     )
 }
+
+
 
 export default App;
