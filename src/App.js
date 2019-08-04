@@ -8,17 +8,27 @@ class App extends React.Component{
     this.state ={
       listCount: 0,
       listItems: [],
-
+      listCompleteStatus: []
     }
 
     this.addItem = this.addItem.bind(this);
     this.changeCompleteStatus = this.changeCompleteStatus.bind(this);
+    this.setComplete = this.setComplete(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.listCompleteStatus !== prevProps.listCompleteStatus) {
+      this.fetchData(this.props.userID);
+    }
+    console.table(this.state.listCompleteStatus)
   }
 
   
   addItem(e) {
     
     let newItem = e.target.value; 
+    let newStatus = false;
     console.log("newItem: " + newItem)
     let keycode = e.keyCode ? e.keyCode : e.charCode;
 
@@ -28,16 +38,34 @@ class App extends React.Component{
       this.setState({
         listCount: this.state.listCount + 1,
         listItems: [...this.state.listItems, newItem],
-  
+        listCompleteStatus: [...this.state.listCompleteStatus, newStatus]
       })
       e.preventDefault();
     }   
   }
-
   
-changeCompleteStatus() {
+  changeCompleteStatus(index) {
+    this.setState(prevState=>{
+      const newComplete = [...prevState.listCompleteStatus];
+      newComplete[index] = !newComplete[index];
+      return { listCompleteStatus: newComplete };
+    })
 
-}
+    let getChangeStatusElement = document.getElementsByClassName('hideText')[0]
+    console.log(!this.state.listCompleteStatus[index])
+    
+    console.log(getChangeStatusElement)
+    if (!this.state.listCompleteStatus[index] === true) {
+      getChangeStatusElement.classList.add("showText")
+    } else {
+      getChangeStatusElement.classList.remove("showText")
+    }
+  }
+
+  setComplete() {
+    
+  }
+
 
   render() {
 
@@ -52,7 +80,7 @@ changeCompleteStatus() {
               <label id="firstLabel"></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} changeComplete={this.changeCompleteStatus()} />
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lStatus={this.state.listCompleteStatus} changeComplete={this.changeCompleteStatus} />
           </form>
         </section>
         <footer id="footerPage">
@@ -65,7 +93,9 @@ changeCompleteStatus() {
 }
 
 
-  function ListItem(props) {
+function ListItem(props) {
+     
+
     const allItems = props.lItems;
     let todoCount = props.lCount;
     console.log("todoCount: " + todoCount)
@@ -73,7 +103,7 @@ changeCompleteStatus() {
       <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
         <label key={`container${index}`} className="container">
           <div key={`checkWrapper${index}`} id="checkWrapper">
-            <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={props.changeCompleteStatus} />
+            <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => props.changeComplete(index)} />
             <span key={`checkmark${index}`} className="checkmark"></span>
           </div>
           <div key={`addedTodos${index}`} className="addedTodos">{task}</div>

@@ -201,6 +201,14 @@ li:hover {
   border: 1px solid hsl(0,0%,75%)
 }
 
+.hideText {
+  color: hsl(0,0%,100%)
+}
+
+.showText {
+  color: hsl(0,0%,75%) !important;
+}
+
 
 
 #todoSelect {
