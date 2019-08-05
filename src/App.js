@@ -8,12 +8,13 @@ class App extends React.Component{
     this.state ={
       listCount: 0,
       listItems: [],
-      listCompleteStatus: []
+      listCompleteStatus: [],
+      listStatus: 0,
     }
 
     this.addItem = this.addItem.bind(this);
     this.changeCompleteStatus = this.changeCompleteStatus.bind(this);
-    this.setComplete = this.setComplete(this);
+    this.setStatus = this.setStatus(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -62,8 +63,11 @@ class App extends React.Component{
     }
   }
 
-  setComplete() {
-    
+  setStatus(num) {
+
+    console.log("testing")
+    console.log(num) 
+    //e.preventDefault()
   }
 
 
@@ -80,7 +84,7 @@ class App extends React.Component{
               <label id="firstLabel"></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lStatus={this.state.listCompleteStatus} changeComplete={this.changeCompleteStatus} />
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} />
           </form>
         </section>
         <footer id="footerPage">
@@ -93,8 +97,7 @@ class App extends React.Component{
 }
 
 
-function ListItem(props) {
-     
+function ListItem(props) {   
 
     const allItems = props.lItems;
     let todoCount = props.lCount;
@@ -111,8 +114,6 @@ function ListItem(props) {
       </div>
     )
 
- 
-
 
   return (
     <React.Fragment>   
@@ -120,9 +121,9 @@ function ListItem(props) {
       {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} items left
         <nav>
           <ul id="todoSelect">
-            <li>All</li>
-            <li>Active</li>
-            <li>Completed</li>
+            <li><button className="statusButton" value="1" onClick={(num)=>props.lCheck(1)}>All</button></li>
+            <li><button className="statusButton" value="2" onClick={(num)=>props.lCheck(2)}>Active</button></li>
+            <li><button className="statusButton" value="3" onClick={(num)=>props.lCheck(3)}>Completed</button></li>
           </ul>
         </nav>
         <span className="hideText">Clear Completed</span>
