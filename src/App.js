@@ -14,7 +14,7 @@ class App extends React.Component{
 
     this.addItem = this.addItem.bind(this);
     this.changeCompleteStatus = this.changeCompleteStatus.bind(this);
-    this.setStatus = this.setStatus(this);
+    this.setStatus = this.setStatus.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -63,11 +63,13 @@ class App extends React.Component{
     }
   }
 
-  setStatus(num) {
+  setStatus(e) {
+    e.preventDefault();
+  
+    this.setState({
+      listStatus: e.target.value
+    })
 
-    console.log("testing")
-    console.log(num) 
-    //e.preventDefault()
   }
 
 
@@ -97,22 +99,28 @@ class App extends React.Component{
 }
 
 
-function ListItem(props) {   
+class ListItem extends React.Component{ 
+  constructor(props) {
+    super(props)
+  }
 
-    const allItems = props.lItems;
-    let todoCount = props.lCount;
-    console.log("todoCount: " + todoCount)
-    const items = allItems.map((task, index) =>
-      <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
-        <label key={`container${index}`} className="container">
-          <div key={`checkWrapper${index}`} id="checkWrapper">
-            <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => props.changeComplete(index)} />
-            <span key={`checkmark${index}`} className="checkmark"></span>
-          </div>
-          <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
-        </label>
-      </div>
-    )
+  
+  render() { 
+
+  const allItems = this.props.lItems;
+  let todoCount = this.props.lCount;
+  console.log("todoCount: " + todoCount)
+  const items = allItems.map((task, index) =>
+    <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
+      <label key={`container${index}`} className="container">
+        <div key={`checkWrapper${index}`} id="checkWrapper">
+          <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => this.props.changeComplete(index)} />
+          <span key={`checkmark${index}`} className="checkmark"></span>
+        </div>
+        <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
+      </label>
+    </div>
+  )
 
 
   return (
@@ -121,9 +129,9 @@ function ListItem(props) {
       {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} items left
         <nav>
           <ul id="todoSelect">
-            <li><button className="statusButton" value="1" onClick={(num)=>props.lCheck(1)}>All</button></li>
-            <li><button className="statusButton" value="2" onClick={(num)=>props.lCheck(2)}>Active</button></li>
-            <li><button className="statusButton" value="3" onClick={(num)=>props.lCheck(3)}>Completed</button></li>
+            <li><button className="statusButton" value="1" onClick={(e)=> this.props.lCheck(e)}>All</button></li>
+            <li><button className="statusButton" value="2" onClick={(e) => this.props.lCheck(e)}>Active</button></li>
+            <li><button className="statusButton" value="3" onClick={(e)=> this.props.lCheck(e)}>Completed</button></li>
           </ul>
         </nav>
         <span className="hideText">Clear Completed</span>
@@ -131,6 +139,7 @@ function ListItem(props) {
         <div id="bookPagesImage"></div> <div id="bookPagesImage2"></div></div>}
      </React.Fragment>
     )
+}
 }
 
 
