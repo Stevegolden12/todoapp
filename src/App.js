@@ -22,7 +22,7 @@ class App extends React.Component{
     if (this.props.listCompleteStatus !== prevProps.listCompleteStatus) {
       this.fetchData(this.props.userID);
     }
-    console.table(this.state.listCompleteStatus)
+  
   }
 
   
@@ -43,6 +43,8 @@ class App extends React.Component{
       })
       e.preventDefault();
     }   
+    console.log(newStatus)
+    console.table(this.state.listCompleteStatus)
   }
   
   changeCompleteStatus(index) {
@@ -67,7 +69,7 @@ class App extends React.Component{
     e.preventDefault();
   
     this.setState({
-      listStatus: e.target.value
+      listStatus: parseInt(e.target.value)
     })
 
   }
@@ -86,7 +88,7 @@ class App extends React.Component{
               <label id="firstLabel"></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} />
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} />
           </form>
         </section>
         <footer id="footerPage">
@@ -106,21 +108,40 @@ class ListItem extends React.Component{
 
   
   render() { 
+    let items = <h1>No Matches found</h1>;
 
-  const allItems = this.props.lItems;
+    /*  this.prop.lFilter has 3 ranges 1,2,3 and lStatus is boolean with true or false
+     *  if statement to ignore all/1,
+     *  make if statement to translate lStatus to either 0 or 1
+     * 
+     * */
+  const allItems = this.props.lItems.filter((val, i)=>this.props.lFilter === this.props.lStatus[i])
   let todoCount = this.props.lCount;
-  console.log("todoCount: " + todoCount)
-  const items = allItems.map((task, index) =>
-    <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
-      <label key={`container${index}`} className="container">
-        <div key={`checkWrapper${index}`} id="checkWrapper">
-          <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => this.props.changeComplete(index)} />
-          <span key={`checkmark${index}`} className="checkmark"></span>
+    console.log("lFILTER: " + this.props.lFilter)
+
+    if (this.props.lFilter === 1) {
+      console.log("All")
+    } else if (this.props.lFilter === 2) {
+      console.log("Active")
+    } else if (this.props.lFilter === 3) {
+      console.log("Complete")
+    }
+
+    console.table(this.props.lStatus)
+
+      items = allItems.map((task, index) =>  
+        <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
+          <label key={`container${index}`} className="container">
+            <div key={`checkWrapper${index}`} id="checkWrapper">
+              <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => this.props.changeComplete(index)} />
+              <span key={`checkmark${index}`} className="checkmark"></span>
+            </div>
+            <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
+          </label>
         </div>
-        <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
-      </label>
-    </div>
-  )
+      ) 
+  
+
 
 
   return (
