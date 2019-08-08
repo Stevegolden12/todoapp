@@ -57,7 +57,7 @@ class App extends React.Component{
     let getChangeStatusElement = document.getElementsByClassName('hideText')[0]
     console.log(!this.state.listCompleteStatus[index])
     
-    console.log(getChangeStatusElement)
+   
     if (!this.state.listCompleteStatus[index] === true) {
       getChangeStatusElement.classList.add("showText")
     } else {
@@ -109,37 +109,53 @@ class ListItem extends React.Component{
   
   render() { 
     let items = <h1>No Matches found</h1>;
-
+    let allItems = this.props.lItems;
+    let onlyCorrectStatus = this.props.lStatus;
     /*  this.prop.lFilter has 3 ranges 1,2,3 and lStatus is boolean with true or false
      *  if statement to ignore all/1,
      *  make if statement to translate lStatus to either 0 or 1
      * 
      * */
-  const allItems = this.props.lItems.filter((val, i)=>this.props.lFilter === this.props.lStatus[i])
+    if (this.props.lFilter === 1) {
+      
+    } else if (this.props.lFilter === 2) {
+      console.table(this.props.lStatus)
+      allItems = this.props.lItems.filter((val, i) => this.props.lStatus[i] === false)
+      onlyCorrectStatus = this.props.lStatus.filter((val, i) => val === false)
+      console.log("TESTING ACTIVE")
+      console.log(allItems)
+    } else if (this.props.lFilter === 3) {
+      allItems = this.props.lItems.filter((val, i) => this.props.lStatus[i] === true)
+      onlyCorrectStatus = this.props.lStatus.filter((val, i) => val === true)
+      console.log("TESTING COMPLETE")
+      console.log(allItems)
+    }
+ 
   let todoCount = this.props.lCount;
     console.log("lFILTER: " + this.props.lFilter)
 
-    if (this.props.lFilter === 1) {
-      console.log("All")
-    } else if (this.props.lFilter === 2) {
-      console.log("Active")
-    } else if (this.props.lFilter === 3) {
-      console.log("Complete")
-    }
 
     console.table(this.props.lStatus)
 
-      items = allItems.map((task, index) =>  
+    items = allItems.map((task, index) =>  
+        
         <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
           <label key={`container${index}`} className="container">
-            <div key={`checkWrapper${index}`} id="checkWrapper">
-              <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => this.props.changeComplete(index)} />
+          <div key={`checkWrapper${index}`} id="checkWrapper">
+            {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => this.props.changeComplete(index)} />}
+            {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={() => this.props.changeComplete(index)} />}
               <span key={`checkmark${index}`} className="checkmark"></span>
             </div>
             <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
           </label>
         </div>
-      ) 
+    ) 
+    
+
+    
+   
+ 
+   
   
 
 
