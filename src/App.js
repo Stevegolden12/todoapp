@@ -77,10 +77,7 @@ class App extends React.Component{
 
   deleteItem(e, i) {
     e.preventDefault();
-    //findIndex
-    //delete  listItems: []
-    //delete listCompleteStatus: [],
-    //reduce listCount
+ 
     let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
     let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind)=> ind !== i)
     let reduceCount = this.state.listCount - 1
@@ -182,7 +179,7 @@ class ListItem extends React.Component{
     <React.Fragment>   
         {items}
       {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} items left
-        <nav>
+        <nav className="filterButtons">
           <ul id="todoSelect">
             <li><button className="statusButton" value="1" onClick={(e)=> this.props.lCheck(e)}>All</button></li>
             <li><button className="statusButton" value="2" onClick={(e) => this.props.lCheck(e)}>Active</button></li>
