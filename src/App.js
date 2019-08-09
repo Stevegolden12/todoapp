@@ -15,6 +15,7 @@ class App extends React.Component{
     this.addItem = this.addItem.bind(this);
     this.changeCompleteStatus = this.changeCompleteStatus.bind(this);
     this.setStatus = this.setStatus.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -74,6 +75,28 @@ class App extends React.Component{
 
   }
 
+  deleteItem(e, i) {
+    e.preventDefault();
+    //findIndex
+    //delete  listItems: []
+    //delete listCompleteStatus: [],
+    //reduce listCount
+    let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
+    let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind)=> ind !== i)
+    let reduceCount = this.state.listCount - 1
+    console.table(filteredItems)
+    console.table(filterCompleteStatus)
+    console.log("reduceCount: " + reduceCount)
+
+  this.setState({
+    listItems: filteredItems,
+    listCompleteStatus: filterCompleteStatus,
+    listCount: reduceCount
+  });
+
+    console.log("deleteItem index: " + i)
+  }
+
 
   render() {
 
@@ -88,7 +111,7 @@ class App extends React.Component{
               <label id="firstLabel"></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} />
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} />
           </form>
         </section>
         <footer id="footerPage">
@@ -146,17 +169,12 @@ class ListItem extends React.Component{
             {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={() => this.props.changeComplete(index)} />}
               <span key={`checkmark${index}`} className="checkmark"></span>
             </div>
-            <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
+          <div key={`addedTodos${index}`} className="addedTodos">{task}
+            <button key={`deleteButton${index}`} className="deleteButton" onClick={(e)=>this.props.dItem(e, index)}>X</button>
+          </div>
           </label>
         </div>
-    ) 
-    
-
-    
-   
- 
-   
-  
+    )  
 
 
 
