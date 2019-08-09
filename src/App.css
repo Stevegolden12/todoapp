@@ -1,3 +1,10 @@
+/* todoInfo box shadow to left
+   todoInfo border removal on top and left
+   change delete button position
+   Fix items for more than 2 and item for 1
+*/
+
+
 body {
   background-color: hsl(0,0%,96%);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -29,6 +36,8 @@ h1 {
   display: flex;
   justify-content: center;
   width: 100%;
+  border-bottom-color: hsl(0,0%,98%);
+  margin-bottom: 1px;
 }
 
 #firstLabel {
@@ -45,10 +54,11 @@ h1 {
 .container {
   display: block;
   position: relative;
-  width: 67%;
-  margin-bottom: 12px;
+  width: 263px;
   cursor: pointer;
   font-size: 22px;
+  border-right-width: 0px;
+  margin-right: 50px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -77,7 +87,7 @@ h1 {
   left: 0px;
   height: 50px;
   width: 50px;
-  border: 1px solid hsl(0,0%,94%);
+  border: 1px solid hsl(0,0%,85%);
   border-radius: 25px;
 }
 
@@ -88,7 +98,7 @@ h1 {
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
-  background-color: #2196F3;
+  background-color: hsl(0,0%,100%);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -109,15 +119,30 @@ h1 {
   top: 7px;
   width: 9px;
   height: 26px;
-  border: solid white;
+  border: solid hsl(131, 50%, 54%);
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(38deg);
   -ms-transform: rotate(38deg);
   transform: rotate(38deg);
 }
 
+.deleteButton {
+  border-width: 0;
+  background-color: white;
+  color: hsl(0, 0%, 100%);
+  font-size: 20px;
+  position: relative;
+  left: 170px;
+  bottom: 20px;
+}
 
+.container:hover .deleteButton {
+  color: hsl(0, 53%, 39%);
+}
 
+ .container:hover .deleteButton:hover {
+    color: hsl(0,31%, 20%);
+ }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
@@ -150,8 +175,8 @@ input:-webkit-autofill:focus {
 }
 
 #firstInput {
-  width: 45%;
-  padding: 16px 16px 16px 60px;
+  width: 230px;
+  padding: 16px 16px 16px 20px;
   border: none;
   background-color: hsl(0, 0%, 100%);
   box-shadow: 4px 8px 5px rgba(0,0,0,0.23);
@@ -162,40 +187,34 @@ input:-webkit-autofill:focus {
 }
 
 .addedTodos {
-  width: 94%;
-  box-shadow: 4px 8px 5px rgba(0,0,0,0.23);
+  width: 249px;
+  box-shadow: 4px 0px 5px hsl(0,0%,75%);
   font-size: 24px;
   line-height: 34px;
   min-height: 48px;
-  padding: 23px 0 0 100px;
+  padding: 23px 0 0 65px;
   background-color: hsl(0, 0%, 100%);
 }
 
 #todoInfoWrapper {
-  width: 59%;
+  width: 315px;
   color: #777;
   text-align: center;
-  border: 1px solid #878787;
+  border: 1px solid hsl(0, 0%, 77%);
   min-height: 34px;
   background-color: hsl(0, 0%, 100%);
 }
 
 #todoInfo {
-  display: inline-block;
-  padding-left: 10px;
+  display: block;
+  text-align: center; 
   width: 100%;
-  text-align: left;
 }
 
 nav {
   display: inline-block;
   margin: 0 auto;
 }
-
- li:nth-child(1),
- li:nth-child(2){
-    padding-right: 7px;
- }
 
 li:hover {
   border: 1px solid hsl(0,0%,75%)
@@ -209,17 +228,25 @@ li:hover {
   color: hsl(0,0%,75%) !important;
 }
 
-#todoSelect {
-  display: inline-flex;
-  list-style: none;
+.filterButtons {
+  width: 100%;
 }
 
-.statusButton{
-  font-family: inherit; /* 1 */
-  font-size: 100%; /* 1 */
-  line-height: 1.15; /* 1 */
-  margin: 0; /* 2 */
-  background-color: hsl(0,0%,100%)
+#todoSelect {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding-left: 0;
+}
+
+
+.statusButton {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  background-color: hsl(0,0%,100%);
+  border: 1px solid hsl(0,0%,80%);
 }
 
 
