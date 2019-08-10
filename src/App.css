@@ -65,6 +65,7 @@ h1 {
 .container {
   display: block;
   position: relative;
+  background-color: hsl(0,0%,100%);
   width: 314px;
   cursor: pointer;
   font-size: 22px;
@@ -75,6 +76,13 @@ h1 {
   user-select: none;
 }
 
+#checkWrapper {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+}
+
+
 #checkboxWrapper {
   background-color: white;
   width: 33px;
@@ -82,24 +90,27 @@ h1 {
 }
 
   /* Hide the browser's default checkbox */
-  .container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 70px;
+  width: 50px;
+}
 
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
-  top: 11px;
-  left: 0px;
-  height: 50px;
-  width: 50px;
+  top: 16px;
+  left: 5px;
+  height: 45px;
+  width: 45px;
   border: 1px solid hsl(0,0%,85%);
   border-radius: 25px;
 }
+
+
+/*Switching all from .container to #checkWrapper*/
 
 /* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
@@ -122,11 +133,11 @@ h1 {
 .container input:checked ~ .checkmark:after {
   display: block;
 }
-
+ 
 /* Style the checkmark/indicator */
 .container .checkmark:after {
-  left: 19px;
-  top: 7px;
+  left: 17px;
+  top: 5px;
   width: 9px;
   height: 26px;
   border: solid hsl(131, 50%, 54%);
@@ -212,7 +223,7 @@ input:-webkit-autofill:focus {
   font-size: 24px;
   line-height: 34px;
   min-height: 48px;
-  padding: 23px 0 0 65px;
+  padding: 23px 0 0 15px;
   background-color: hsl(0, 0%, 100%);
 }
 

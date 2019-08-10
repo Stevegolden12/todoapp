@@ -16,6 +16,7 @@ class App extends React.Component{
     this.changeCompleteStatus = this.changeCompleteStatus.bind(this);
     this.setStatus = this.setStatus.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.editItem = this.editItem.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -31,12 +32,12 @@ class App extends React.Component{
     
     let newItem = e.target.value; 
     let newStatus = false;
-    console.log("newItem: " + newItem)
+    //console.log("newItem: " + newItem)
     let keycode = e.keyCode ? e.keyCode : e.charCode;
 
  
     if (keycode === 13) {
-      console.log("WORKING")
+     // console.log("WORKING")
       this.setState({
         listCount: this.state.listCount + 1,
         listItems: [...this.state.listItems, newItem],
@@ -44,11 +45,18 @@ class App extends React.Component{
       })
       e.preventDefault();
     }   
-    console.log(newStatus)
-    console.table(this.state.listCompleteStatus)
+   // console.log(newStatus)
+   // console.table(this.state.listCompleteStatus)
   }
   
-  changeCompleteStatus(index) {
+  changeCompleteStatus(e, index) {
+
+    e.persist();
+    e.nativeEvent.stopImmediatePropagation();
+    e.stopPropagation(); 
+
+    console.log(e.target)
+
     this.setState(prevState=>{
       const newComplete = [...prevState.listCompleteStatus];
       newComplete[index] = !newComplete[index];
@@ -56,7 +64,7 @@ class App extends React.Component{
     })
 
     let getChangeStatusElement = document.getElementsByClassName('hideText')[0]
-    console.log(!this.state.listCompleteStatus[index])
+    //console.log(!this.state.listCompleteStatus[index])
     
    
     if (!this.state.listCompleteStatus[index] === true) {
@@ -94,6 +102,10 @@ class App extends React.Component{
     console.log("deleteItem index: " + i)
   }
 
+  editItem(e, i) {
+    e.preventDefault();
+    console.log("editItem function")
+  }
 
   render() {
 
@@ -108,7 +120,7 @@ class App extends React.Component{
               <label id="firstLabel"></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} />
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} eItem={this.editItem} />
           </form>
         </section>
         <footer id="footerPage">
@@ -151,25 +163,25 @@ class ListItem extends React.Component{
     }
  
   let todoCount = this.props.lCount;
-    console.log("lFILTER: " + this.props.lFilter)
+    //console.log("lFILTER: " + this.props.lFilter)
 
 
-    console.table(this.props.lStatus)
+    //console.table(this.props.lStatus)
 
     items = allItems.map((task, index) =>  
         
         <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
           <label key={`container${index}`} className="container">
           <div key={`checkWrapper${index}`} id="checkWrapper">
-            {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => this.props.changeComplete(index)} />}
-            {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={() => this.props.changeComplete(index)} />}
+            {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={(e) => this.props.changeComplete(e, index)} />}
+            {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={(e) => this.props.changeComplete(e, index)} />}
               <span key={`checkmark${index}`} className="checkmark"></span>
-            </div>
-          <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
+          </div>  
+          <div key={`addedTodos${index}`} className="addedTodos" onDoubleClick={(e)=>this.props.eItem(e, index)}>{task}</div>
           <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
             <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.props.dItem(e, index)}>X</button>
           </div>
-          </label>
+        </label>
         </div>
     )  
 
@@ -179,7 +191,7 @@ class ListItem extends React.Component{
     <React.Fragment>   
         {items}
       {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} 
-        {todoCount == 1 && " item left"}
+        {todoCount === 1 && " item left"}
         {todoCount >1 && " items left"}
         <nav className="filterButtons">
           <ul id="todoSelect">
