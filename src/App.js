@@ -112,8 +112,7 @@ class App extends React.Component{
           </form>
         </section>
         <footer id="footerPage">
-          <p className="footerPageText">Double-click to edit a todo</p>
-          <p className="footerPageText">Created by petehunt</p>
+          <p className="footerPageText">Double-click to edit a todo</p>       
         </footer>
       </div>
     );
@@ -166,8 +165,9 @@ class ListItem extends React.Component{
             {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={() => this.props.changeComplete(index)} />}
               <span key={`checkmark${index}`} className="checkmark"></span>
             </div>
-          <div key={`addedTodos${index}`} className="addedTodos">{task}
-            <button key={`deleteButton${index}`} className="deleteButton" onClick={(e)=>this.props.dItem(e, index)}>X</button>
+          <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
+          <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
+            <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.props.dItem(e, index)}>X</button>
           </div>
           </label>
         </div>
@@ -178,7 +178,9 @@ class ListItem extends React.Component{
   return (
     <React.Fragment>   
         {items}
-      {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} items left
+      {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} 
+        {todoCount == 1 && " item left"}
+        {todoCount >1 && " items left"}
         <nav className="filterButtons">
           <ul id="todoSelect">
             <li><button className="statusButton" value="1" onClick={(e)=> this.props.lCheck(e)}>All</button></li>
