@@ -135,8 +135,17 @@ class App extends React.Component{
 class ListItem extends React.Component{ 
   constructor(props) {
     super(props)
+
+    this.noBubbling = this.noBubbling.bind(this);
   }
 
+  noBubbling(e, index) {
+    e.persist();
+    e.nativeEvent.stopImmediatePropagation();
+    e.stopPropagation(); 
+
+    this.props.changeComplete(e, index)
+  }
   
   render() { 
     let items = <h1>No Matches found</h1>;
@@ -170,18 +179,20 @@ class ListItem extends React.Component{
 
     items = allItems.map((task, index) =>  
         
-        <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
-          <label key={`container${index}`} className="container">
+      <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
+        <div key={`container${index}`} className="container">
+          <label key={`checkboxLabel${index}`} className="checkboxLabel">
           <div key={`checkWrapper${index}`} id="checkWrapper">
-            {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={(e) => this.props.changeComplete(e, index)} />}
-            {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={(e) => this.props.changeComplete(e, index)} />}
+            {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={(e) => this.noBubbling(e, index)} />}
+            {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={(e) => this.noBubbling(e, index)} />}
               <span key={`checkmark${index}`} className="checkmark"></span>
           </div>  
-          <div key={`addedTodos${index}`} className="addedTodos" onDoubleClick={(e)=>this.props.eItem(e, index)}>{task}</div>
-          <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
-            <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.props.dItem(e, index)}>X</button>
-          </div>
-        </label>
+          </label>
+        </div>     
+            <div key={`addedTodos${index}`} className="addedTodos" onDoubleClick={(e) => this.props.eItem(e, index)}>{task}</div>
+              <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
+              <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.props.dItem(e, index)}>X</button>
+            </div>     
         </div>
     )  
 
@@ -207,6 +218,8 @@ class ListItem extends React.Component{
     )
 }
 }
+
+
 
 
 

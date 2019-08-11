@@ -28,7 +28,7 @@ h1 {
 #todoFormWrapper {
  display: flex;
  justify-content: center;
- width: 100%;
+ width: 320px;
 
 }
 
@@ -66,7 +66,7 @@ h1 {
   display: block;
   position: relative;
   background-color: hsl(0,0%,100%);
-  width: 314px;
+  width: 50px;
   cursor: pointer;
   font-size: 22px;
   border-right-width: 0px;
@@ -164,13 +164,13 @@ h1 {
   bottom: 20px;
 }
 
-.container:hover .deleteButton {
+.todoWrapper:hover .deleteButton {
   color: hsl(0, 53%, 39%);
 }
 
- .container:hover .deleteButton:hover {
+.todoWrapper:hover .deleteButton:hover {
     color: hsl(0,31%, 20%);
- }
+  }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
