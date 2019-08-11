@@ -38,11 +38,13 @@ class App extends React.Component{
  
     if (keycode === 13) {
      // console.log("WORKING")
+ 
       this.setState({
         listCount: this.state.listCount + 1,
         listItems: [...this.state.listItems, newItem],
         listCompleteStatus: [...this.state.listCompleteStatus, newStatus]
       })
+  
       e.preventDefault();
     }   
    // console.log(newStatus)
@@ -55,8 +57,6 @@ class App extends React.Component{
     e.nativeEvent.stopImmediatePropagation();
     e.stopPropagation(); 
 
-    console.log(e.target)
-
     this.setState(prevState=>{
       const newComplete = [...prevState.listCompleteStatus];
       newComplete[index] = !newComplete[index];
@@ -65,12 +65,14 @@ class App extends React.Component{
 
     let getChangeStatusElement = document.getElementsByClassName('hideText')[0]
     //console.log(!this.state.listCompleteStatus[index])
-    
+    let striketodoText = document.getElementsByClassName('addedTodos')[index]
    
     if (!this.state.listCompleteStatus[index] === true) {
       getChangeStatusElement.classList.add("showText")
+      striketodoText.classList.add('strikeText')
     } else {
       getChangeStatusElement.classList.remove("showText")
+      striketodoText.classList.remove('strikeText')
     }
   }
 
@@ -85,26 +87,40 @@ class App extends React.Component{
 
   deleteItem(e, i) {
     e.preventDefault();
- 
-    let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
-    let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind)=> ind !== i)
-    let reduceCount = this.state.listCount - 1
-    console.table(filteredItems)
-    console.table(filterCompleteStatus)
-    console.log("reduceCount: " + reduceCount)
 
-  this.setState({
-    listItems: filteredItems,
-    listCompleteStatus: filterCompleteStatus,
-    listCount: reduceCount
-  });
+    let keycode = e.keyCode ? e.keyCode : e.charCode;
 
-    console.log("deleteItem index: " + i)
+    console.log("deleteItem keycode: " + keycode)
+
+      let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
+      let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind) => ind !== i)
+      let reduceCount = this.state.listCount - 1
+      console.table(filteredItems)
+      console.table(filterCompleteStatus)
+      console.log("reduceCount: " + reduceCount)
+
+      this.setState({
+        listItems: filteredItems,
+        listCompleteStatus: filterCompleteStatus,
+        listCount: reduceCount
+      });
+
+      console.log("deleteItem index: " + i)
+
   }
 
   editItem(e, i) {
-    e.preventDefault();
-    console.log("editItem function")
+    let keycode = e.keyCode ? e.keyCode : e.charCode;
+
+      let allItems = this.state.listItems;
+      allItems[i] = e.target.value;
+      console.table("editItem: " + allItems)
+
+      this.setState({
+        listItems: allItems,
+      })
+  
+     console.table(this.state.listItems)
   }
 
   render() {
@@ -136,16 +152,53 @@ class ListItem extends React.Component{
   constructor(props) {
     super(props)
 
-    this.noBubbling = this.noBubbling.bind(this);
+      this.state={
+      readOnly: true,
+    }
+
+    this.noBubblingChangeComplete = this.noBubblingChangeComplete.bind(this);
+    this.noBubblingEditItem = this.noBubblingEditItem.bind(this);
+    this.noBubblingDeleteItem = this.noBubblingDeleteItem.bind(this);
+    this.editInput = this.editInput.bind(this);
   }
 
-  noBubbling(e, index) {
+  noBubblingChangeComplete(e, index) {
     e.persist();
     e.nativeEvent.stopImmediatePropagation();
     e.stopPropagation(); 
 
     this.props.changeComplete(e, index)
   }
+
+  noBubblingEditItem(e, index) {
+    e.preventDefault();
+    e.persist();
+    e.nativeEvent.stopImmediatePropagation();
+    e.stopPropagation();
+  
+      this.props.eItem(e, index)
+    this.setState({
+      readOnly: true
+    })
+    e.target.classList.add('noFocusColor')
+  }  
+
+  noBubblingDeleteItem(e, index) {
+   
+ 
+    this.props.dItem(e, index)
+
+  }
+
+  editInput(e, index) {
+    e.target.innerHTML = e.target.value;
+    e.target.classList.remove('noFocusColor')  
+    this.setState({
+      readOnly: false
+    })
+    console.log("editInput inputDisable: " + this.state.readOnly)
+  }
+
   
   render() { 
     let items = <h1>No Matches found</h1>;
@@ -183,16 +236,18 @@ class ListItem extends React.Component{
         <div key={`container${index}`} className="container">
           <label key={`checkboxLabel${index}`} className="checkboxLabel">
           <div key={`checkWrapper${index}`} id="checkWrapper">
-            {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={(e) => this.noBubbling(e, index)} />}
-            {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={(e) => this.noBubbling(e, index)} />}
+              {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={(e) => this.noBubblingChangeComplete(e, index)} />}
+              {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={(e) => this.noBubblingChangeComplete(e, index)} />}
               <span key={`checkmark${index}`} className="checkmark"></span>
           </div>  
           </label>
-        </div>     
-            <div key={`addedTodos${index}`} className="addedTodos" onDoubleClick={(e) => this.props.eItem(e, index)}>{task}</div>
-              <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
-              <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.props.dItem(e, index)}>X</button>
-            </div>     
+        </div>
+        <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" placeholder={task} onDoubleClick={(e)=>this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />
+        {/*
+        <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
+              <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.noBubblingDeleteItem(e, index)}>X</button>
+            </div>
+            */}
         </div>
     )  
 

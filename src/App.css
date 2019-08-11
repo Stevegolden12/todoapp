@@ -50,15 +50,15 @@ h1 {
   color: hsl(0,0%,30%);
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+#firstInput::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   font-size: 20px;
 }
 
-::-ms-input-placeholder { /* Internet Explorer 10-11 */
+::-ms-#firstInput-placeholder { /* Internet Explorer 10-11 */
   font-size: 20px;
 }
 
-::-ms-input-placeholder { /* Microsoft Edge */
+::-ms-#firstInput-placeholder { /* Microsoft Edge */
   font-size: 20px;
 }
 
@@ -171,35 +171,11 @@ h1 {
 .todoWrapper:hover .deleteButton:hover {
     color: hsl(0,31%, 20%);
   }
-
+ 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
   background-color: hsl(0,0%,100%) !important;
-}
-
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
-}
-
-::-moz-placeholder { /* Firefox 19+ */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
-}
-
-:-ms-input-placeholder { /* IE 10+ */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
-}
-
-:-moz-placeholder { /* Firefox 18- */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
 }
 
 #firstInput {
@@ -225,8 +201,52 @@ input:-webkit-autofill:focus {
   min-height: 48px;
   padding: 23px 0 0 15px;
   background-color: hsl(0, 0%, 100%);
+  border: none;
 }
 
+.addedTodos::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: hsl(0,0%,0%);
+}
+
+::-ms-.addedTodos-placeholder { /* Internet Explorer 10-11 */
+  color: hsl(0,0%,0%);
+}
+
+::-ms-.addedTodos-placeholder { /* Microsoft Edge */
+  color: hsl(0,0%,0%);
+}
+
+.noFocusColor:focus {
+  outline: none;
+}
+
+.strikeText {
+  text-decoration: line-through;
+}
+
+.strikeText
+
+
+#firstInput::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  font-size: 20px;
+  color: hsl(0,0%,88%);
+  font-style: italic;
+  text-align: left;
+}
+
+::-ms-#firstInput-placeholder { /* Internet Explorer 10-11 */
+  font-size: 20px;
+  color: hsl(0,0%,88%);
+  font-style: italic;
+  text-align: left;
+}
+
+::-ms-#firstInput-placeholder { /* Microsoft Edge */
+  font-size: 20px;
+  color: hsl(0,0%,88%);
+  font-style: italic;
+  text-align: left;
+}
 #todoInfoWrapper {
   width: 316px;
   color: hsl(0,0%,47%);
