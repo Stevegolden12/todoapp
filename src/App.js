@@ -10,6 +10,7 @@ class App extends React.Component{
       listItems: [],
       listCompleteStatus: [],
       listStatus: 0,
+      checkAll: false,
     }
 
     this.addItem = this.addItem.bind(this);
@@ -17,12 +18,13 @@ class App extends React.Component{
     this.setStatus = this.setStatus.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.editItem = this.editItem.bind(this);
+    this.checkboxAll = this.checkboxAll.bind(this);
   }
 
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
     if (this.props.listCompleteStatus !== prevProps.listCompleteStatus) {
-      this.fetchData(this.props.userID);
+      this.fetchData(this.props.listCompleteStatus);
     }
   
   }
@@ -110,8 +112,6 @@ class App extends React.Component{
   }
 
   editItem(e, i) {
-    let keycode = e.keyCode ? e.keyCode : e.charCode;
-
       let allItems = this.state.listItems;
       allItems[i] = e.target.value;
       console.table("editItem: " + allItems)
@@ -121,6 +121,37 @@ class App extends React.Component{
       })
   
      console.table(this.state.listItems)
+  }
+
+  checkboxAll(e) {
+    let checkAll;
+    let checkAllComplete;
+
+  
+    if (this.state.checkAll === false) {
+      console.log("checkboxAll state: " + this.state.checkAll)
+      checkAll = this.state.listCompleteStatus;
+      console.table(checkAll)
+      checkAllComplete = checkAll.map((check, ind) =>{
+        return checkAll[ind] = true
+      })
+      
+      this.setState({
+        listCompleteStatus: checkAllComplete,
+        checkAll: true,
+      })
+      e.target.classList.add('firstLabelCheckAll')
+    } else {
+      checkAll = this.state.listCompleteStatus;
+      checkAllComplete = checkAll.map((check, ind) => {
+        return checkAll[ind] = false
+      })
+      this.setState({
+        listCompleteStatus: checkAllComplete,
+        checkAll: false,
+      })
+      e.target.classList.remove('firstLabelCheckAll')    }
+   
   }
 
   render() {
@@ -133,7 +164,7 @@ class App extends React.Component{
         <section>
           <form id="todoForm">
             <div id="todoFormWrapper">
-              <label id="firstLabel"></label>
+              <label className="firstLabel" onClick={(e)=>this.checkboxAll(e)}></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
             <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} eItem={this.editItem} />
@@ -161,6 +192,7 @@ class ListItem extends React.Component{
     this.noBubblingDeleteItem = this.noBubblingDeleteItem.bind(this);
     this.editInput = this.editInput.bind(this);
     this.checkEnter = this.checkEnter.bind(this);
+
   }
 
   noBubblingChangeComplete(e, index) {
@@ -209,6 +241,8 @@ class ListItem extends React.Component{
       e.preventDefault();   
     }  
   }
+
+
   
   render() { 
     let items = <h1>No Matches found</h1>;
@@ -244,7 +278,7 @@ class ListItem extends React.Component{
         
       <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
         <div key={`container${index}`} className="container">
-          <label key={`checkboxLabel${index}`} className="checkboxLabel">
+          <label key={`checkboxLabel${index}`} className="checkboxLabel">         
           <div key={`checkWrapper${index}`} id="checkWrapper">
               {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={(e) => this.noBubblingChangeComplete(e, index)} />}
               {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={(e) => this.noBubblingChangeComplete(e, index)} />}
