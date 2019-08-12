@@ -40,7 +40,7 @@ h1 {
   margin-bottom: 1px;
 }
 
-#firstLabel {
+.firstLabel {
   background-image: url(./image/down-arrow.svg);
   background-repeat: no-repeat;
   width: 50px;
@@ -48,6 +48,10 @@ h1 {
   background-size: 45% 100%;
   background-position: 15px;
   color: hsl(0,0%,30%);
+}
+
+.firstLabelCheckAll {
+  background-image: url(./image/down-arrow-gray.svg)
 }
 
 #firstInput::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
