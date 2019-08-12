@@ -160,6 +160,7 @@ class ListItem extends React.Component{
     this.noBubblingEditItem = this.noBubblingEditItem.bind(this);
     this.noBubblingDeleteItem = this.noBubblingDeleteItem.bind(this);
     this.editInput = this.editInput.bind(this);
+    this.checkEnter = this.checkEnter.bind(this);
   }
 
   noBubblingChangeComplete(e, index) {
@@ -176,7 +177,7 @@ class ListItem extends React.Component{
     e.nativeEvent.stopImmediatePropagation();
     e.stopPropagation();
   
-      this.props.eItem(e, index)
+    this.props.eItem(e, index)
     this.setState({
       readOnly: true
     })
@@ -191,14 +192,23 @@ class ListItem extends React.Component{
   }
 
   editInput(e, index) {
-    e.target.innerHTML = e.target.value;
+   console.log("e.target.value: " + e.target.value)
     e.target.classList.remove('noFocusColor')  
     this.setState({
       readOnly: false
     })
-    console.log("editInput inputDisable: " + this.state.readOnly)
+
+    console.log("editInput readOnly: " + this.state.readOnly)
   }
 
+  checkEnter(e) {
+    var code = e.keyCode || e.which;
+  
+    if (code === 13) { 
+      document.getElementById('firstInput').focus();
+      e.preventDefault();   
+    }  
+  }
   
   render() { 
     let items = <h1>No Matches found</h1>;
@@ -242,12 +252,13 @@ class ListItem extends React.Component{
           </div>  
           </label>
         </div>
-        <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" placeholder={task} onDoubleClick={(e)=>this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />
-        {/*
+        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" defaultValue={task} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" defaultValue={task} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        
         <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
               <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.noBubblingDeleteItem(e, index)}>X</button>
             </div>
-            */}
+         
         </div>
     )  
 

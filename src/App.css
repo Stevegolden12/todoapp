@@ -164,6 +164,7 @@ h1 {
   bottom: 20px;
 }
 
+
 .todoWrapper:hover .deleteButton {
   color: hsl(0, 53%, 39%);
 }
@@ -171,7 +172,7 @@ h1 {
 .todoWrapper:hover .deleteButton:hover {
     color: hsl(0,31%, 20%);
   }
- 
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
