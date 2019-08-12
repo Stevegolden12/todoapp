@@ -28,7 +28,7 @@ h1 {
 #todoFormWrapper {
  display: flex;
  justify-content: center;
- width: 100%;
+ width: 320px;
 
 }
 
@@ -50,22 +50,23 @@ h1 {
   color: hsl(0,0%,30%);
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+#firstInput::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   font-size: 20px;
 }
 
-::-ms-input-placeholder { /* Internet Explorer 10-11 */
+::-ms-#firstInput-placeholder { /* Internet Explorer 10-11 */
   font-size: 20px;
 }
 
-::-ms-input-placeholder { /* Microsoft Edge */
+::-ms-#firstInput-placeholder { /* Microsoft Edge */
   font-size: 20px;
 }
 
 .container {
   display: block;
   position: relative;
-  width: 314px;
+  background-color: hsl(0,0%,100%);
+  width: 50px;
   cursor: pointer;
   font-size: 22px;
   border-right-width: 0px;
@@ -75,6 +76,13 @@ h1 {
   user-select: none;
 }
 
+#checkWrapper {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+}
+
+
 #checkboxWrapper {
   background-color: white;
   width: 33px;
@@ -82,24 +90,27 @@ h1 {
 }
 
   /* Hide the browser's default checkbox */
-  .container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 70px;
+  width: 50px;
+}
 
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
-  top: 11px;
-  left: 0px;
-  height: 50px;
-  width: 50px;
+  top: 16px;
+  left: 5px;
+  height: 45px;
+  width: 45px;
   border: 1px solid hsl(0,0%,85%);
   border-radius: 25px;
 }
+
+
+/*Switching all from .container to #checkWrapper*/
 
 /* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
@@ -122,11 +133,11 @@ h1 {
 .container input:checked ~ .checkmark:after {
   display: block;
 }
-
+ 
 /* Style the checkmark/indicator */
 .container .checkmark:after {
-  left: 19px;
-  top: 7px;
+  left: 17px;
+  top: 5px;
   width: 9px;
   height: 26px;
   border: solid hsl(131, 50%, 54%);
@@ -153,42 +164,19 @@ h1 {
   bottom: 20px;
 }
 
-.container:hover .deleteButton {
+
+.todoWrapper:hover .deleteButton {
   color: hsl(0, 53%, 39%);
 }
 
- .container:hover .deleteButton:hover {
+.todoWrapper:hover .deleteButton:hover {
     color: hsl(0,31%, 20%);
- }
+  }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
   background-color: hsl(0,0%,100%) !important;
-}
-
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
-}
-
-::-moz-placeholder { /* Firefox 19+ */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
-}
-
-:-ms-input-placeholder { /* IE 10+ */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
-}
-
-:-moz-placeholder { /* Firefox 18- */
-  color: hsl(0,0%,88%);
-  font-style: italic;
-  text-align: left;
 }
 
 #firstInput {
@@ -212,10 +200,54 @@ input:-webkit-autofill:focus {
   font-size: 24px;
   line-height: 34px;
   min-height: 48px;
-  padding: 23px 0 0 65px;
+  padding: 23px 0 0 15px;
   background-color: hsl(0, 0%, 100%);
+  border: none;
 }
 
+.addedTodos::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: hsl(0,0%,0%);
+}
+
+::-ms-.addedTodos-placeholder { /* Internet Explorer 10-11 */
+  color: hsl(0,0%,0%);
+}
+
+::-ms-.addedTodos-placeholder { /* Microsoft Edge */
+  color: hsl(0,0%,0%);
+}
+
+.noFocusColor:focus {
+  outline: none;
+}
+
+.strikeText {
+  text-decoration: line-through;
+}
+
+.strikeText
+
+
+#firstInput::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  font-size: 20px;
+  color: hsl(0,0%,88%);
+  font-style: italic;
+  text-align: left;
+}
+
+::-ms-#firstInput-placeholder { /* Internet Explorer 10-11 */
+  font-size: 20px;
+  color: hsl(0,0%,88%);
+  font-style: italic;
+  text-align: left;
+}
+
+::-ms-#firstInput-placeholder { /* Microsoft Edge */
+  font-size: 20px;
+  color: hsl(0,0%,88%);
+  font-style: italic;
+  text-align: left;
+}
 #todoInfoWrapper {
   width: 316px;
   color: hsl(0,0%,47%);

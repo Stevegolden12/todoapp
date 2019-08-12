@@ -16,6 +16,7 @@ class App extends React.Component{
     this.changeCompleteStatus = this.changeCompleteStatus.bind(this);
     this.setStatus = this.setStatus.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.editItem = this.editItem.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -31,24 +32,31 @@ class App extends React.Component{
     
     let newItem = e.target.value; 
     let newStatus = false;
-    console.log("newItem: " + newItem)
+    //console.log("newItem: " + newItem)
     let keycode = e.keyCode ? e.keyCode : e.charCode;
 
  
     if (keycode === 13) {
-      console.log("WORKING")
+     // console.log("WORKING")
+ 
       this.setState({
         listCount: this.state.listCount + 1,
         listItems: [...this.state.listItems, newItem],
         listCompleteStatus: [...this.state.listCompleteStatus, newStatus]
       })
+  
       e.preventDefault();
     }   
-    console.log(newStatus)
-    console.table(this.state.listCompleteStatus)
+   // console.log(newStatus)
+   // console.table(this.state.listCompleteStatus)
   }
   
-  changeCompleteStatus(index) {
+  changeCompleteStatus(e, index) {
+
+    e.persist();
+    e.nativeEvent.stopImmediatePropagation();
+    e.stopPropagation(); 
+
     this.setState(prevState=>{
       const newComplete = [...prevState.listCompleteStatus];
       newComplete[index] = !newComplete[index];
@@ -56,13 +64,15 @@ class App extends React.Component{
     })
 
     let getChangeStatusElement = document.getElementsByClassName('hideText')[0]
-    console.log(!this.state.listCompleteStatus[index])
-    
+    //console.log(!this.state.listCompleteStatus[index])
+    let striketodoText = document.getElementsByClassName('addedTodos')[index]
    
     if (!this.state.listCompleteStatus[index] === true) {
       getChangeStatusElement.classList.add("showText")
+      striketodoText.classList.add('strikeText')
     } else {
       getChangeStatusElement.classList.remove("showText")
+      striketodoText.classList.remove('strikeText')
     }
   }
 
@@ -77,23 +87,41 @@ class App extends React.Component{
 
   deleteItem(e, i) {
     e.preventDefault();
- 
-    let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
-    let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind)=> ind !== i)
-    let reduceCount = this.state.listCount - 1
-    console.table(filteredItems)
-    console.table(filterCompleteStatus)
-    console.log("reduceCount: " + reduceCount)
 
-  this.setState({
-    listItems: filteredItems,
-    listCompleteStatus: filterCompleteStatus,
-    listCount: reduceCount
-  });
+    let keycode = e.keyCode ? e.keyCode : e.charCode;
 
-    console.log("deleteItem index: " + i)
+    console.log("deleteItem keycode: " + keycode)
+
+      let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
+      let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind) => ind !== i)
+      let reduceCount = this.state.listCount - 1
+      console.table(filteredItems)
+      console.table(filterCompleteStatus)
+      console.log("reduceCount: " + reduceCount)
+
+      this.setState({
+        listItems: filteredItems,
+        listCompleteStatus: filterCompleteStatus,
+        listCount: reduceCount
+      });
+
+      console.log("deleteItem index: " + i)
+
   }
 
+  editItem(e, i) {
+    let keycode = e.keyCode ? e.keyCode : e.charCode;
+
+      let allItems = this.state.listItems;
+      allItems[i] = e.target.value;
+      console.table("editItem: " + allItems)
+
+      this.setState({
+        listItems: allItems,
+      })
+  
+     console.table(this.state.listItems)
+  }
 
   render() {
 
@@ -108,7 +136,7 @@ class App extends React.Component{
               <label id="firstLabel"></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} />
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} eItem={this.editItem} />
           </form>
         </section>
         <footer id="footerPage">
@@ -123,8 +151,64 @@ class App extends React.Component{
 class ListItem extends React.Component{ 
   constructor(props) {
     super(props)
+
+      this.state={
+      readOnly: true,
+    }
+
+    this.noBubblingChangeComplete = this.noBubblingChangeComplete.bind(this);
+    this.noBubblingEditItem = this.noBubblingEditItem.bind(this);
+    this.noBubblingDeleteItem = this.noBubblingDeleteItem.bind(this);
+    this.editInput = this.editInput.bind(this);
+    this.checkEnter = this.checkEnter.bind(this);
   }
 
+  noBubblingChangeComplete(e, index) {
+    e.persist();
+    e.nativeEvent.stopImmediatePropagation();
+    e.stopPropagation(); 
+
+    this.props.changeComplete(e, index)
+  }
+
+  noBubblingEditItem(e, index) {
+    e.preventDefault();
+    e.persist();
+    e.nativeEvent.stopImmediatePropagation();
+    e.stopPropagation();
+  
+    this.props.eItem(e, index)
+    this.setState({
+      readOnly: true
+    })
+    e.target.classList.add('noFocusColor')
+  }  
+
+  noBubblingDeleteItem(e, index) {
+   
+ 
+    this.props.dItem(e, index)
+
+  }
+
+  editInput(e, index) {
+   console.log("e.target.value: " + e.target.value)
+    e.target.classList.remove('noFocusColor')  
+    this.setState({
+      readOnly: false
+    })
+
+    console.log("editInput readOnly: " + this.state.readOnly)
+  }
+
+  checkEnter(e) {
+    var code = e.keyCode || e.which;
+  
+    if (code === 13) { 
+      document.getElementById('firstInput').focus();
+      e.preventDefault();   
+    }  
+  }
   
   render() { 
     let items = <h1>No Matches found</h1>;
@@ -151,25 +235,30 @@ class ListItem extends React.Component{
     }
  
   let todoCount = this.props.lCount;
-    console.log("lFILTER: " + this.props.lFilter)
+    //console.log("lFILTER: " + this.props.lFilter)
 
 
-    console.table(this.props.lStatus)
+    //console.table(this.props.lStatus)
 
     items = allItems.map((task, index) =>  
         
-        <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
-          <label key={`container${index}`} className="container">
+      <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
+        <div key={`container${index}`} className="container">
+          <label key={`checkboxLabel${index}`} className="checkboxLabel">
           <div key={`checkWrapper${index}`} id="checkWrapper">
-            {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={() => this.props.changeComplete(index)} />}
-            {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={() => this.props.changeComplete(index)} />}
+              {onlyCorrectStatus[index] === false && <input key={`check-box${index}`} type="checkbox" className="check-box" onChange={(e) => this.noBubblingChangeComplete(e, index)} />}
+              {onlyCorrectStatus[index] === true && <input key={`check-box${index}`} type="checkbox" className="check-box" checked onChange={(e) => this.noBubblingChangeComplete(e, index)} />}
               <span key={`checkmark${index}`} className="checkmark"></span>
-            </div>
-          <div key={`addedTodos${index}`} className="addedTodos">{task}</div>
-          <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
-            <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.props.dItem(e, index)}>X</button>
-          </div>
+          </div>  
           </label>
+        </div>
+        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" defaultValue={task} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" defaultValue={task} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        
+        <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
+              <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.noBubblingDeleteItem(e, index)}>X</button>
+            </div>
+         
         </div>
     )  
 
@@ -179,7 +268,7 @@ class ListItem extends React.Component{
     <React.Fragment>   
         {items}
       {todoCount > 0 && <div id="todoInfoWrapper"><div id="todoInfo">{todoCount} 
-        {todoCount == 1 && " item left"}
+        {todoCount === 1 && " item left"}
         {todoCount >1 && " items left"}
         <nav className="filterButtons">
           <ul id="todoSelect">
@@ -195,6 +284,8 @@ class ListItem extends React.Component{
     )
 }
 }
+
+
 
 
 
