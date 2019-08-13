@@ -1,6 +1,14 @@
 import React from 'react';
 import './App.css';
 
+/*
+ *Need to add an array in probably parent state to check which input we are on
+ * When adding todo add one in the array
+ * When deleting todo remove one in the array
+ * Change input to reflect this
+ * */
+
+
 class App extends React.Component{
   constructor(props){
     super(props)
@@ -10,7 +18,8 @@ class App extends React.Component{
       listItems: [],
       listCompleteStatus: [],
       listStatus: 0,
-      checkAll: false,       
+      checkAll: false,
+      listChange: []
     }
 
     this.addItem = this.addItem.bind(this);
@@ -19,6 +28,7 @@ class App extends React.Component{
     this.deleteItem = this.deleteItem.bind(this);
     this.editItem = this.editItem.bind(this);
     this.checkboxAll = this.checkboxAll.bind(this);
+    this.changeInputValue = this.changeInputValue.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -36,6 +46,7 @@ class App extends React.Component{
     
     let newItem = e.target.value; 
     let newStatus = false;
+    let defaultChange = false
     //console.log("newItem: " + newItem)
     let keycode = e.keyCode ? e.keyCode : e.charCode;
 
@@ -46,7 +57,8 @@ class App extends React.Component{
       this.setState({
         listCount: this.state.listCount + 1,
         listItems: [...this.state.listItems, newItem],
-        listCompleteStatus: [...this.state.listCompleteStatus, newStatus]
+        listCompleteStatus: [...this.state.listCompleteStatus, newStatus],
+        listChange: [...this.state.listChange, defaultChange]
       })
   
       e.preventDefault();
@@ -100,6 +112,7 @@ class App extends React.Component{
 
       let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
       let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind) => ind !== i)
+      let filterListChange = this.state.listChange.filter((item, ind) => ind !== i)
       let reduceCount = this.state.listCount - 1
       console.table(filteredItems)
       console.table(filterCompleteStatus)
@@ -110,7 +123,8 @@ class App extends React.Component{
       this.setState({
         listItems: filteredItems,
         listCompleteStatus: filterCompleteStatus,
-        listCount: reduceCount
+        listCount: reduceCount,
+        listChange: filterListChange
       });
 
       console.log("deleteItem index: " + i)
@@ -123,8 +137,8 @@ class App extends React.Component{
       allItems[i] = changedValue;
       console.table("editItem: " + allItems)
 
-      this.setState({
-        listItems: allItems,
+    this.setState({
+        listItems: allItems,        
       })
   
      console.table(this.state.listItems)
@@ -161,6 +175,18 @@ class App extends React.Component{
    
   }
 
+  changeInputValue(boolVal, i) {
+    console.log("changeInputValue is: " + boolVal)
+    console.log("chnageInputValue index is: " + i)
+    let newChangeValue = this.state.listChange;
+    newChangeValue[i] = boolVal;
+
+
+    this.setState({
+      listChange: newChangeValue
+    })
+  }
+
   render() {
 
     return (
@@ -174,7 +200,7 @@ class App extends React.Component{
               <label className="firstLabel" onClick={(e)=>this.checkboxAll(e)}></label>
               <input type="text" id="firstInput" placeholder="What needs to be done?" onKeyPress={this.addItem}></input>
             </div>
-            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} eItem={this.editItem} />
+            <ListItem lCount={this.state.listCount} lItems={this.state.listItems} lFilter={this.state.listStatus} lStatus={this.state.listCompleteStatus} lCheck={this.setStatus} changeComplete={this.changeCompleteStatus} dItem={this.deleteItem} eItem={this.editItem} lChange={this.state.listChange} lChangeFunc={this.changeInputValue} />
           </form>
         </section>
         <footer id="footerPage">
@@ -224,6 +250,7 @@ class ListItem extends React.Component{
       readOnly: true
     })
     e.target.classList.add('noFocusColor')
+    this.props.lChangeFunc(false, index)
   }  
 
   noBubblingDeleteItem(e, index) {
@@ -236,13 +263,17 @@ class ListItem extends React.Component{
   editInput(e, index) {
  
     e.target.classList.remove('noFocusColor')  
-
+    console.log("editINput index: " + index)
+    this.props.lChangeFunc(true, index);
+    console.log("should be True: " + this.props.lChange)
+    
     this.setState({
       changeValue: true,
       readOnly: false,     
     })
 
     console.log("editInput readOnly: " + this.state.readOnly)
+
   }
 
   checkEnter(e) {
@@ -266,6 +297,7 @@ class ListItem extends React.Component{
     let items = <h1>No Matches found</h1>;
     let allItems = this.props.lItems;
     let onlyCorrectStatus = this.props.lStatus;
+    let onlyCorrectChange = this.props.lChange;
     /*  this.prop.lFilter has 3 ranges 1,2,3 and lStatus is boolean with true or false
      *  if statement to ignore all/1,
      *  make if statement to translate lStatus to either 0 or 1
@@ -277,11 +309,13 @@ class ListItem extends React.Component{
       console.table(this.props.lStatus)
       allItems = this.props.lItems.filter((val, i) => this.props.lStatus[i] === false)
       onlyCorrectStatus = this.props.lStatus.filter((val, i) => val === false)
+      onlyCorrectChange = this.props.lChange.filter((val, i) => this.props.lStatus[i] === false)
       console.log("TESTING ACTIVE")
       console.log(allItems)
     } else if (this.props.lFilter === 3) {
       allItems = this.props.lItems.filter((val, i) => this.props.lStatus[i] === true)
       onlyCorrectStatus = this.props.lStatus.filter((val, i) => val === true)
+      onlyCorrectChange = this.props.lChange.filter((val, i) => this.props.lStatus[i] === true)
       console.log("TESTING COMPLETE")
       console.log(allItems)
     }
@@ -305,8 +339,8 @@ class ListItem extends React.Component{
           </div>  
           </label>
         </div>
-        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" value={(this.state.changeValue === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e)=>this.changeValueInput(e)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
-        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" value={(this.state.changeValue === false) ? task : this.state.valueInput} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" value={(onlyCorrectChange[index] === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e)=>this.changeValueInput(e)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" value={(onlyCorrectChange[index] === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e) => this.changeValueInput(e)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
         
         <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
               <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.noBubblingDeleteItem(e, index)}>X</button>
