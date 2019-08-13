@@ -176,8 +176,8 @@ class App extends React.Component{
   }
 
   changeInputValue(boolVal, i) {
-    console.log("changeInputValue is: " + boolVal)
-    console.log("chnageInputValue index is: " + i)
+   // console.log("changeInputValue is: " + boolVal)
+   // console.log("chnageInputValue index is: " + i)
     let newChangeValue = this.state.listChange;
     newChangeValue[i] = boolVal;
 
@@ -243,8 +243,13 @@ class ListItem extends React.Component{
     e.persist();
     e.nativeEvent.stopImmediatePropagation();
     e.stopPropagation();  
-  
-    this.props.eItem(e, index, this.state.valueInput)
+
+    if (this.state.valueInput !== '') {
+      this.props.eItem(e, index, this.state.valueInput)
+    } else {
+       this.props.dItem(e, index)
+    }
+
     this.setState({
       changeValue: false,
       readOnly: true
@@ -285,10 +290,11 @@ class ListItem extends React.Component{
     }  
   }
 
-  changeValueInput(e) {
-    this.setState({
-      valueInput: e.target.value
-    })
+  changeValueInput(e, index) {
+      this.setState({
+        valueInput: e.target.value
+      })
+
   }
 
 
@@ -325,8 +331,8 @@ class ListItem extends React.Component{
 
 
     //console.table(this.props.lStatus)
-    console.log("Before rendering: " + allItems)
-    console.log(this.state.changeValue)
+    //console.log("Before rendering: " + allItems)
+    //console.log(this.state.changeValue)
     items = allItems.map((task, index) =>  
     
       <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
@@ -339,8 +345,8 @@ class ListItem extends React.Component{
           </div>  
           </label>
         </div>
-        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" value={(onlyCorrectChange[index] === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e)=>this.changeValueInput(e)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
-        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" value={(onlyCorrectChange[index] === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e) => this.changeValueInput(e)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" value={(onlyCorrectChange[index] === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e)=>this.changeValueInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" value={(onlyCorrectChange[index] === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e) => this.changeValueInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
         
         <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
               <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.noBubblingDeleteItem(e, index)}>X</button>
