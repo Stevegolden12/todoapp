@@ -50,18 +50,21 @@ class App extends React.Component{
     //console.log("newItem: " + newItem)
     let keycode = e.keyCode ? e.keyCode : e.charCode;
 
- 
+   console.log("keycode: " + keycode)
     if (keycode === 13) {
      // console.log("WORKING")
- 
-      this.setState({
-        listCount: this.state.listCount + 1,
-        listItems: [...this.state.listItems, newItem],
-        listCompleteStatus: [...this.state.listCompleteStatus, newStatus],
-        listChange: [...this.state.listChange, defaultChange]
-      })
-  
-      e.preventDefault();
+      if (e.target.value !== '') {
+        this.setState({
+          listCount: this.state.listCount + 1,
+          listItems: [...this.state.listItems, newItem],
+          listCompleteStatus: [...this.state.listCompleteStatus, newStatus],
+          listChange: [...this.state.listChange, defaultChange]
+        })
+
+        e.preventDefault();
+      } else {
+        e.preventDefault();
+      }
     }   
    // console.log(newStatus)
    // console.table(this.state.listCompleteStatus)
