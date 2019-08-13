@@ -10,7 +10,7 @@ class App extends React.Component{
       listItems: [],
       listCompleteStatus: [],
       listStatus: 0,
-      checkAll: false,
+      checkAll: false,       
     }
 
     this.addItem = this.addItem.bind(this);
@@ -26,7 +26,9 @@ class App extends React.Component{
     if (this.props.listCompleteStatus !== prevProps.listCompleteStatus) {
       this.fetchData(this.props.listCompleteStatus);
     }
-  
+    if (this.props.changeValue !== prevProps.changeValue) {
+      this.fetchData(this.props.changeValue);
+    }
   }
 
   
@@ -94,12 +96,16 @@ class App extends React.Component{
 
     console.log("deleteItem keycode: " + keycode)
 
+  
+
       let filteredItems = this.state.listItems.filter((item, ind) => ind !== i)
       let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind) => ind !== i)
       let reduceCount = this.state.listCount - 1
       console.table(filteredItems)
       console.table(filterCompleteStatus)
-      console.log("reduceCount: " + reduceCount)
+    console.log("reduceCount: " + reduceCount)
+
+    console.log(typeof filteredItems)
 
       this.setState({
         listItems: filteredItems,
@@ -111,9 +117,10 @@ class App extends React.Component{
 
   }
 
-  editItem(e, i) {
+  editItem(e, i, changedValue) {
+
       let allItems = this.state.listItems;
-      allItems[i] = e.target.value;
+      allItems[i] = changedValue;
       console.table("editItem: " + allItems)
 
       this.setState({
@@ -184,7 +191,9 @@ class ListItem extends React.Component{
     super(props)
 
       this.state={
-      readOnly: true,
+        readOnly: true,
+        changeValue: false,
+        valueInput: '',
     }
 
     this.noBubblingChangeComplete = this.noBubblingChangeComplete.bind(this);
@@ -207,10 +216,11 @@ class ListItem extends React.Component{
     e.preventDefault();
     e.persist();
     e.nativeEvent.stopImmediatePropagation();
-    e.stopPropagation();
+    e.stopPropagation();  
   
-    this.props.eItem(e, index)
+    this.props.eItem(e, index, this.state.valueInput)
     this.setState({
+      changeValue: false,
       readOnly: true
     })
     e.target.classList.add('noFocusColor')
@@ -224,10 +234,12 @@ class ListItem extends React.Component{
   }
 
   editInput(e, index) {
-   console.log("e.target.value: " + e.target.value)
+ 
     e.target.classList.remove('noFocusColor')  
+
     this.setState({
-      readOnly: false
+      changeValue: true,
+      readOnly: false,     
     })
 
     console.log("editInput readOnly: " + this.state.readOnly)
@@ -240,6 +252,12 @@ class ListItem extends React.Component{
       document.getElementById('firstInput').focus();
       e.preventDefault();   
     }  
+  }
+
+  changeValueInput(e) {
+    this.setState({
+      valueInput: e.target.value
+    })
   }
 
 
@@ -273,9 +291,10 @@ class ListItem extends React.Component{
 
 
     //console.table(this.props.lStatus)
-
+    console.log("Before rendering: " + allItems)
+    console.log(this.state.changeValue)
     items = allItems.map((task, index) =>  
-        
+    
       <div key={`todoWrapper${index}`} id={index} className="todoWrapper">
         <div key={`container${index}`} className="container">
           <label key={`checkboxLabel${index}`} className="checkboxLabel">         
@@ -286,8 +305,8 @@ class ListItem extends React.Component{
           </div>  
           </label>
         </div>
-        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" defaultValue={task} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
-        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" defaultValue={task} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === false && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos noFocusColor" value={(this.state.changeValue === false) ? task : this.state.valueInput} onKeyPress={(e) => this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onChange={(e)=>this.changeValueInput(e)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
+        {onlyCorrectStatus[index] === true && <input readOnly={this.state.readOnly} type="text" key={`addedTodos${index}`} className="addedTodos strikeText noFocusColor" value={(this.state.changeValue === false) ? task : this.state.valueInput} onKeyPress={(e)=>this.checkEnter(e)} onDoubleClick={(e) => this.editInput(e, index)} onBlur={(e) => this.noBubblingEditItem(e, index)} />}
         
         <div key={`deleteButtonWrapper${index}`} className="deleteButtonWrapper">
               <button key={`deleteButton${index}`} className="deleteButton" onClick={(e) => this.noBubblingDeleteItem(e, index)}>X</button>
