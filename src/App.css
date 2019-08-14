@@ -56,14 +56,17 @@ h1 {
 
 #firstInput::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   font-size: 20px;
+  color: hsl(0, 0%, 75%);
 }
 
 ::-ms-#firstInput-placeholder { /* Internet Explorer 10-11 */
   font-size: 20px;
+  color: hsl(0, 0%, 75%);
 }
 
 ::-ms-#firstInput-placeholder { /* Microsoft Edge */
   font-size: 20px;
+  color: hsl(0, 0%, 75%);
 }
 
 .container {
@@ -316,4 +319,49 @@ li:hover {
 
 .footerPageText {
   text-align: center;
+}
+
+/* 768px screen breakpoint */
+@media only screen and (min-width: 768px) {
+  #todoFormWrapper {
+    width: 480px;
+  }
+  #firstInput {
+    width: 430px;
+    font-size: 30px;
+  }
+
+  .firstLabel {
+    width: 57px;
+  }
+
+  #firstInput::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-size: 28px;
+  }
+
+  ::-ms-#firstInput-placeholder { /* Internet Explorer 10-11 */
+    font-size: 28px;
+  }
+
+  ::-ms-#firstInput-placeholder { /* Microsoft Edge */
+    font-size: 28px;
+  }
+
+  .addedTodos {
+    width: 385px;
+    font-size: 30px;
+  }
+
+  #todoInfoWrapper {
+    width: 480px;
+  }
+  #todoInfo {
+    font-size: 20px;
+  }
+  #todoSelect {
+    margin: 10px;
+  }
+  .footerPageText {
+    font-size: 12px;
+  }
 }
