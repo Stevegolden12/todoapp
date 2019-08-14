@@ -109,7 +109,7 @@ class App extends React.Component{
 
     let keycode = e.keyCode ? e.keyCode : e.charCode;
 
-    console.log("deleteItem keycode: " + keycode)
+   // console.log("deleteItem keycode: " + keycode)
 
   
 
@@ -117,11 +117,11 @@ class App extends React.Component{
       let filterCompleteStatus = this.state.listCompleteStatus.filter((item, ind) => ind !== i)
       let filterListChange = this.state.listChange.filter((item, ind) => ind !== i)
       let reduceCount = this.state.listCount - 1
-      console.table(filteredItems)
-      console.table(filterCompleteStatus)
-    console.log("reduceCount: " + reduceCount)
+   //   console.table(filteredItems)
+   //   console.table(filterCompleteStatus)
+   //   console.log("reduceCount: " + reduceCount)
 
-    console.log(typeof filteredItems)
+   // console.log(typeof filteredItems)
 
       this.setState({
         listItems: filteredItems,
@@ -130,8 +130,11 @@ class App extends React.Component{
         listChange: filterListChange
       });
 
-      console.log("deleteItem index: " + i)
-
+  //    console.log("deleteItem index: " + i)
+    if (this.state.listCount === 1) { 
+      let checkAllSelector = document.getElementsByClassName('firstLabel')[0]
+      checkAllSelector.classList.remove('firstLabelCheckAll')
+    }
   }
 
   editItem(e, i, changedValue) {
@@ -151,30 +154,32 @@ class App extends React.Component{
     let checkAll;
     let checkAllComplete;
 
-  
-    if (this.state.checkAll === false) {
-      console.log("checkboxAll state: " + this.state.checkAll)
-      checkAll = this.state.listCompleteStatus;
-      console.table(checkAll)
-      checkAllComplete = checkAll.map((check, ind) =>{
-        return checkAll[ind] = true
-      })
-      
-      this.setState({
-        listCompleteStatus: checkAllComplete,
-        checkAll: true,
-      })
-      e.target.classList.add('firstLabelCheckAll')
-    } else {
-      checkAll = this.state.listCompleteStatus;
-      checkAllComplete = checkAll.map((check, ind) => {
-        return checkAll[ind] = false
-      })
-      this.setState({
-        listCompleteStatus: checkAllComplete,
-        checkAll: false,
-      })
-      e.target.classList.remove('firstLabelCheckAll')    }
+    if (this.state.listCount > 0) {
+      if (this.state.checkAll === false) {
+        console.log("checkboxAll state: " + this.state.checkAll)
+        checkAll = this.state.listCompleteStatus;
+        console.table(checkAll)
+        checkAllComplete = checkAll.map((check, ind) => {
+          return checkAll[ind] = true
+        })
+
+        this.setState({
+          listCompleteStatus: checkAllComplete,
+          checkAll: true,
+        })
+        e.target.classList.add('firstLabelCheckAll')
+      } else {
+        checkAll = this.state.listCompleteStatus;
+        checkAllComplete = checkAll.map((check, ind) => {
+          return checkAll[ind] = false
+        })
+        this.setState({
+          listCompleteStatus: checkAllComplete,
+          checkAll: false,
+        })
+        e.target.classList.remove('firstLabelCheckAll')
+      }
+    }
    
   }
 
