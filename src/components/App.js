@@ -1,7 +1,7 @@
 import React from 'react';
 import '../App.css';
-import ListItem from './ListItem'
-
+import ListItem from './ListItem';
+import PropTypes from 'prop-types';
 /*
  *Need to add an array in probably parent state to check which input we are on
  * When adding todo add one in the array
@@ -221,7 +221,21 @@ class App extends React.Component{
 }
 
 
-
+App.propTypes = {
+  listCount: PropTypes.number,
+  listItems: PropTypes.array,
+  listCompleteStatus: PropTypes.array,
+  listStatus: PropTypes.number,
+  checkAll: PropTypes.bool,
+  listChange: PropTypes.array,
+  addItem: PropTypes.func,
+  changeCompleteStatus: PropTypes.func,
+  setStatus: PropTypes.func,
+  deleteItem: PropTypes.func,
+  editItem: PropTypes.func,
+  checkboxAll: PropTypes.func,
+  changeInputValue: PropTypes.func,
+}
 
 
 
