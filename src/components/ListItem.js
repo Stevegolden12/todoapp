@@ -1,5 +1,6 @@
 import React from 'react';
 import '../App.css';
+import PropTypes from 'prop-types';
 
 class ListItem extends React.Component {
   constructor(props) {
@@ -93,6 +94,7 @@ class ListItem extends React.Component {
     let allItems = this.props.lItems;
     let onlyCorrectStatus = this.props.lStatus;
     let onlyCorrectChange = this.props.lChange;
+
     /*  this.prop.lFilter has 3 ranges 1,2,3 and lStatus is boolean with true or false
      *  if statement to ignore all/1,
      *  make if statement to translate lStatus to either 0 or 1
@@ -168,7 +170,16 @@ class ListItem extends React.Component {
 }
 
 
-
+ListItem.propTypes = {
+  readOnly: PropTypes.bool,
+  changeValue: PropTypes.bool,
+  valueInput: PropTypes.string,
+  noBubblingChangeComplete: PropTypes.func,
+  noBubblingEditItem: PropTypes.func,
+  noBubblingDeleteItem: PropTypes.func,
+  editInput: PropTypes.func,
+  checkEnter: PropTypes.func,
+}
 
 
 export default ListItem
